@@ -51,13 +51,13 @@ function App() {
     try {
 
       const saldoRes = await axios.get(
-        "http://127.0.0.1:8000/saldo/1"
+        "${import.meta.env.VITE_API_URL}/saldo/1"
       );
 
       setSaldo(saldoRes.data.saldo);
 
       const movRes = await axios.get(
-        `http://127.0.0.1:8000/movimientos?page=${pagina}&limit=5&fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`,
+        `${import.meta.env.VITE_API_URL}/movimientos?page=${pagina}&limit=5&fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -120,7 +120,7 @@ function App() {
     try {
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/login",
+        "${import.meta.env.VITE_API_URL}/login",
         loginData
       );
 
@@ -163,7 +163,7 @@ function App() {
     try {
 
       await axios.post(
-        "http://127.0.0.1:8000/movimientos",
+        "${import.meta.env.VITE_API_URL}/movimientos",
         form,
         {
           headers: {
