@@ -126,7 +126,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/login`,
+        `https://gastos-backend-j5au.onrender.com/login`,
         loginData
       );
 
