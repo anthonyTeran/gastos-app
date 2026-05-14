@@ -53,7 +53,7 @@ function App() {
     try {
 
       const saldoRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/saldo/1`,
+        `https://gastos-backend-j5au.onrender.com/saldo/1`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -64,7 +64,7 @@ function App() {
       setSaldo(saldoRes.data.saldo);
 
       const movRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/movimientos?page=${pagina}&limit=5&fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`,
+        `https://gastos-backend-j5au.onrender.com/movimientos?page=${pagina}&limit=5&fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -169,7 +169,7 @@ function App() {
     try {
 
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/movimientos`,
+        `https://gastos-backend-j5au.onrender.com/movimientos`,
         form,
         {
           headers: {
