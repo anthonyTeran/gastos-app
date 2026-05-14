@@ -3,6 +3,8 @@ import axios from "axios";
 
 function App() {
 
+ console.log(import.meta.env.VITE_API_URL)
+
   // ===== LOGIN =====
 
   const [token, setToken] = useState(
