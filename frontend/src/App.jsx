@@ -193,6 +193,32 @@ function App() {
     }
   };
 
+const eliminarMovimiento = async (id) => {
+
+  const confirmar = window.confirm(
+    "¿Eliminar movimiento?"
+  );
+
+  if (!confirmar) return;
+
+  try {
+
+    await axios.delete(
+      `https://gastos-backend-j5au.onrender.com/movimientos/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    cargarDatos();
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   // ===== LOGIN SCREEN =====
 
   if (!token) {
@@ -458,14 +484,6 @@ function App() {
               <tr>
 
                 <th className="p-4 text-left">
-                  Descripción
-                </th>
-
-                <th className="p-4 text-left">
-                  Monto
-                </th>
-
-                <th className="p-4 text-left">
                   Tipo
                 </th>
 
@@ -474,7 +492,19 @@ function App() {
                 </th>
 
                 <th className="p-4 text-left">
+                  Descripción
+                </th>
+
+                <th className="p-4 text-left">
+                  Monto
+                </th>
+
+                <th className="p-4 text-left">
                   Fecha
+                </th>
+
+                <th className="p-4 text-left">
+                  Acciones
                 </th>
 
               </tr>
@@ -489,14 +519,6 @@ function App() {
                   key={mov.id}
                   className="border-t hover:bg-gray-50"
                 >
-
-                  <td className="p-4">
-                    {mov.descripcion}
-                  </td>
-
-                  <td className="p-4">
-                    ${mov.monto}
-                  </td>
 
                   <td className="p-4">
 
@@ -515,7 +537,28 @@ function App() {
                   </td>
 
                   <td className="p-4">
+                    {mov.descripcion}
+                  </td>
+
+                  <td className="p-4">
+                    ${mov.monto}
+                  </td>
+
+                  <td className="p-4">
                     {mov.fecha}
+                  </td>
+
+                  <td className="p-4">
+
+                    <button
+                      onClick={() =>
+                        eliminarMovimiento(mov.id)
+                      }
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    >
+                      Eliminar
+                    </button>
+
                   </td>
 
                 </tr>

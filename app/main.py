@@ -144,3 +144,28 @@ def saldo_usuario(
             usuario_id
         )
     }
+
+@app.delete("/movimientos/{movimiento_id}")
+def borrar_movimiento(
+    movimiento_id: int,
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(
+        obtener_usuario_actual
+    )
+):
+
+    movimiento = crud.eliminar_movimiento(
+        db,
+        movimiento_id,
+        usuario_id
+    )
+
+    if not movimiento:
+        raise HTTPException(
+            status_code=404,
+            detail="Movimiento no encontrado"
+        )
+
+    return {
+        "mensaje": "Movimiento eliminado"
+    }

@@ -68,6 +68,29 @@ def crear_movimiento(
 
     return nuevo
 
+def eliminar_movimiento(
+    db: Session,
+    movimiento_id: int,
+    usuario_id: int
+):
+    movimiento = (
+        db.query(models.Movimiento)
+        .filter(
+            models.Movimiento.id == movimiento_id,
+            models.Movimiento.usuario_id == usuario_id
+        )
+        .first()
+    )
+
+    if not movimiento:
+        return None
+
+    db.delete(movimiento)
+
+    db.commit()
+
+    return movimiento
+
 def obtener_movimientos(
     db: Session,
     usuario_id: int,
