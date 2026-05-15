@@ -1,46 +1,30 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import Categorias from "./pages/Categorias";
+import Sidebar from "./components/Sidebar";
 
 function App() {
+
+  const token = localStorage.getItem("token");
+
+  // ===== SIN LOGIN =====
+
+  if (!token) {
+    return <Dashboard />;
+  }
+
+  // ===== CON LOGIN =====
 
   return (
 
     <BrowserRouter>
 
-      <div className="min-h-screen flex">
+      <div className="flex">
 
-        {/* SIDEBAR */}
+        <Sidebar />
 
-        <div className="w-64 bg-black text-white p-6">
-
-          <h1 className="text-2xl font-bold mb-10">
-            Gastos App
-          </h1>
-
-          <nav className="flex flex-col gap-4">
-
-            <Link to="/">
-              Principal
-            </Link>
-
-            <Link to="/categorias">
-              Categorías
-            </Link>
-
-          </nav>
-
-        </div>
-
-        {/* CONTENT */}
-
-        <div className="flex-1 p-6 bg-gray-100">
+        <div className="flex-1">
 
           <Routes>
 
@@ -52,6 +36,11 @@ function App() {
             <Route
               path="/categorias"
               element={<Categorias />}
+            />
+
+            <Route
+              path="*"
+              element={<Navigate to="/" />}
             />
 
           </Routes>
