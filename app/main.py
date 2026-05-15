@@ -49,7 +49,10 @@ def crear_usuario(
 ):
     return crud.crear_usuario(db, usuario)
 
-@app.get("/usuarios")
+@app.get(
+    "/usuarios",
+    response_model=list[schemas.Usuario]
+)
 def listar_usuarios(
     db: Session = Depends(get_db)
 ):
