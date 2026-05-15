@@ -169,3 +169,62 @@ def borrar_movimiento(
     return {
         "mensaje": "Movimiento eliminado"
     }
+
+@app.post(
+    "/categorias",
+    response_model=schemas.Categoria
+)
+def crear_categoria(
+    categoria: schemas.CategoriaCreate,
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(
+        obtener_usuario_actual
+    )
+):
+
+    return crud.crear_categoria(
+        db,
+        categoria,
+        usuario_id
+    )
+
+@app.get(
+    "/categorias",
+    response_model=list[schemas.Categoria]
+)
+def listar_categorias(
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(
+        obtener_usuario_actual
+    )
+):
+
+    return crud.obtener_categorias(
+        db,
+        usuario_id
+    )
+
+@app.delete("/categorias/{categoria_id}")
+def borrar_categoria(
+    categoria_id: int,
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(
+        obtener_usuario_actual
+    )
+):
+
+    categoria = crud.eliminar_categoria(
+        db,
+        categoria_id,
+        usuario_id
+    )
+
+    if not categoria:
+        raise HTTPException(
+            status_code=404,
+            detail="Categoría no encontrada"
+        )
+
+    return {
+        "mensaje": "Categoría eliminada"
+    }

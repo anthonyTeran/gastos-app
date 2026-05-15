@@ -39,3 +39,20 @@ class LoginData(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+# ===== CATEGORIAS =====
+
+class CategoriaBase(BaseModel):
+    nombre: str
+    tipo: str
+
+class CategoriaCreate(CategoriaBase):
+    pass
+
+class Categoria(CategoriaBase):
+    id: int
+    usuario_id: int
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )

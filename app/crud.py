@@ -176,3 +176,61 @@ def obtener_saldo_usuario(
             saldo -= mov.monto
 
     return saldo
+
+
+def crear_categoria(
+    db: Session,
+    categoria: schemas.CategoriaCreate,
+    usuario_id: int
+):
+
+    nueva = models.Categoria(
+        nombre=categoria.nombre,
+        tipo=categoria.tipo,
+        usuario_id=usuario_id
+    )
+
+    db.add(nueva)
+
+    db.commit()
+
+    db.refresh(nueva)
+
+    return nueva
+
+def obtener_categorias(
+    db: Session,
+    usuario_id: int
+):
+
+    return (
+        db.query(models.Categoria)
+        .filter(
+            models.Categoria.usuario_id == usuario_id
+        )
+        .all()
+    )
+
+def eliminar_categoria(
+    db: Session,
+    categoria_id: int,
+    usuario_id: int
+):
+
+    categoria = (
+        db.query(models.Categoria)
+        .filter(
+            models.Categoria.id == categoria_id,
+            models.Categoria.usuario_id == usuario_id
+        )
+        .first()
+    )
+
+    if not categoria:
+        return None
+
+    db.delete(categoria)
+
+    db.commit()
+
+    return categoria
