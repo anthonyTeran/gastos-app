@@ -17,7 +17,12 @@ function Categorias() {
     try {
 
       const res = await axios.get(
-        `${API}/categorias`
+        `${API}/categorias`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
 
       setCategorias(res.data);
