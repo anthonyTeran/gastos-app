@@ -15,6 +15,27 @@ class Usuario(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+# ===== CATEGORIAS =====
+
+class CategoriaBase(BaseModel):
+    nombre: str
+    tipo: str
+
+class CategoriaCreate(CategoriaBase):
+    pass
+
+class Categoria(BaseModel):
+    id: int
+    nombre: str
+    tipo: str
+    activo: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+class CategoriaUpdate(BaseModel):
+    nombre: str
+    tipo: str
+
 # ===== MOVIMIENTOS =====
 
 class MovimientoBase(BaseModel):
@@ -31,7 +52,12 @@ class Movimiento(MovimientoBase):
     id: int
     usuario_id: int
 
+    categoria: Categoria | None = None
+
     model_config = ConfigDict(from_attributes=True)
+
+# ===== LOGIN =====
+
 class LoginData(BaseModel):
     email: str
     password: str
@@ -39,25 +65,3 @@ class LoginData(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-
-# ===== CATEGORIAS =====
-
-class CategoriaBase(BaseModel):
-    nombre: str
-    tipo: str
-
-class CategoriaCreate(CategoriaBase):
-    pass
-
-class Categoria(BaseModel):
-    id: int
-    nombre: str
-    tipo: str
-    activo: bool
-
-class Config:
-        from_attributes = True
-
-class CategoriaUpdate(BaseModel):
-    nombre: str
-    tipo: str
