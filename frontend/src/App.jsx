@@ -27,7 +27,7 @@ function App() {
           <nav className="flex flex-col gap-4">
 
             <Link to="/">
-              Dashboard
+              Principal
             </Link>
 
             <Link to="/categorias">
