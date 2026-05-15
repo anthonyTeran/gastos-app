@@ -321,7 +321,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${saldo}
+              ${saldo.toFixed(2)}
             </h2>
 
           </div>
@@ -333,7 +333,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${ingresosPeriodo}
+              ${ingresosPeriodo.toFixed(2)}
             </h2>
 
           </div>
@@ -345,7 +345,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${gastosPeriodo}
+              ${gastosPeriodo.toFixed(2)}
             </h2>
 
           </div>
@@ -357,7 +357,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${saldoPeriodo}
+              ${saldoPeriodo.toFixed(2)}
             </h2>
 
           </div>
