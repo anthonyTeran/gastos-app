@@ -12,6 +12,8 @@ function Categorias() {
 
   const API = "https://gastos-backend-j5au.onrender.com";
 
+  const token = localStorage.getItem("token");
+
   const cargarCategorias = async () => {
 
     try {
@@ -52,7 +54,12 @@ function Categorias() {
 
       await axios.post(
         `${API}/categorias`,
-        form
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
 
       setForm({
