@@ -3,7 +3,7 @@ import axios from "axios";
 
 function App() {
 
- console.log(import.meta.env.VITE_API_URL)
+  console.log(import.meta.env.VITE_API_URL)
 
   // ===== LOGIN =====
 
@@ -17,6 +17,8 @@ function App() {
   });
 
   // ===== APP =====
+
+  const [mostrarPassword, setMostrarPassword] = useState(false);
 
   const [saldo, setSaldo] = useState(0);
 
@@ -193,31 +195,42 @@ function App() {
     }
   };
 
-const eliminarMovimiento = async (id) => {
+  const eliminarMovimiento = async (id) => {
 
-  const confirmar = window.confirm(
-    "¿Eliminar movimiento?"
-  );
-
-  if (!confirmar) return;
-
-  try {
-
-    await axios.delete(
-      `https://gastos-backend-j5au.onrender.com/movimientos/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+    const confirmar = window.confirm(
+      "¿Eliminar movimiento?"
     );
 
-    cargarDatos();
+    if (!confirmar) return;
 
-  } catch (error) {
-    console.error(error);
-  }
-};
+    try {
+
+      await axios.delete(
+        `https://gastos-backend-j5au.onrender.com/movimientos/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      cargarDatos();
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const formatearMoneda = (valor) => {
+
+    return Number(valor).toLocaleString(
+      "es-AR",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+  };
 
   // ===== LOGIN SCREEN =====
 
@@ -255,14 +268,34 @@ const eliminarMovimiento = async (id) => {
               className="border p-4 rounded-xl"
             />
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={loginData.password}
-              onChange={handleLoginChange}
-              className="border p-4 rounded-xl"
-            />
+            <div className="relative">
+
+              <input
+                type={
+                  mostrarPassword
+                    ? "text"
+                    : "password"
+                }
+                name="password"
+                placeholder="Password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+                className="border p-4 rounded-xl w-full pr-14"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setMostrarPassword(
+                    !mostrarPassword
+                  )
+                }
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+              >
+                {mostrarPassword ? "🙈" : "👁️"}
+              </button>
+
+            </div>
 
             <button
               type="submit"
@@ -321,7 +354,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${saldo.toFixed(2)}
+              ${formatearMoneda(saldo)}
             </h2>
 
           </div>
@@ -333,7 +366,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${ingresosPeriodo.toFixed(2)}
+              ${formatearMoneda(ingresosPeriodo)}
             </h2>
 
           </div>
@@ -345,7 +378,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${gastosPeriodo.toFixed(2)}
+              ${formatearMoneda(gastosPeriodo)}
             </h2>
 
           </div>
@@ -357,7 +390,7 @@ const eliminarMovimiento = async (id) => {
             </p>
 
             <h2 className="text-3xl font-bold mt-2">
-              ${saldoPeriodo.toFixed(2)}
+              ${formatearMoneda(saldoPeriodo)}
             </h2>
 
           </div>
