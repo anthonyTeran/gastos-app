@@ -24,6 +24,8 @@ function Dashboard() {
 
   const [movimientos, setMovimientos] = useState([]);
 
+  const [categorias, setCategorias] = useState([]);
+
   const [pagina, setPagina] = useState(1);
 
   const movimientosPorPagina = 5;
@@ -32,7 +34,7 @@ function Dashboard() {
     descripcion: "",
     monto: "",
     tipo: "gasto",
-    categoria: "",
+    categoria_id: "",
     fecha: ""
   });
 
@@ -47,6 +49,26 @@ function Dashboard() {
   const [gastosPeriodo, setGastosPeriodo] = useState(0);
 
   const [saldoPeriodo, setSaldoPeriodo] = useState(0);
+
+  const cargarCategorias = async () => {
+
+    try {
+
+      const res = await axios.get(
+        `https://gastos-backend-j5au.onrender.com/categorias?page=1&limit=100`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setCategorias(res.data.items);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // ===== CARGAR DATOS =====
 
@@ -108,6 +130,7 @@ function Dashboard() {
 
     if (token) {
       cargarDatos();
+      cargarCategorias();
     }
 
   }, [token, pagina, fechaDesde, fechaHasta]);
@@ -438,14 +461,31 @@ function Dashboard() {
               <option value="ingreso">Ingreso</option>
             </select>
 
-            <input
-              type="text"
-              name="categoria"
-              placeholder="Categoría"
-              value={form.categoria}
+            <select
+              name="categoria_id"
+              value={form.categoria_id}
               onChange={handleChange}
               className="border p-3 rounded-lg"
-            />
+            >
+
+              <option value="">
+                Seleccionar categoría
+              </option>
+
+              {categorias
+                .filter(cat => cat.tipo === form.tipo)
+                .map((cat) => (
+
+                  <option
+                    key={cat.id}
+                    value={cat.id}
+                  >
+                    {cat.nombre}
+                  </option>
+
+                ))}
+
+            </select>
 
             <input
               type="date"
@@ -566,7 +606,7 @@ function Dashboard() {
                   </td>
 
                   <td className="p-4">
-                    {mov.categoria}
+                    {mov.categoria?.nombre}
                   </td>
 
                   <td className="p-4">

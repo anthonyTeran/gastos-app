@@ -21,7 +21,7 @@ class MovimientoBase(BaseModel):
     descripcion: str
     monto: float
     tipo: str
-    categoria: str
+    categoria_id: int
     fecha: date
 
 class MovimientoCreate(MovimientoBase):

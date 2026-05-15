@@ -20,12 +20,19 @@ class Movimiento(Base):
     descripcion = Column(String, nullable=False)
     monto = Column(Float, nullable=False)
     tipo = Column(String, nullable=False)
-    categoria = Column(String, nullable=False)
+    categoria_id = Column(
+        Integer,
+        ForeignKey("categorias.id")
+    )
     fecha = Column(Date, nullable=False)
 
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
 
     usuario = relationship("Usuario", back_populates="movimientos")
+    categoria = relationship(
+        "Categoria",
+        back_populates="movimientos"
+    )
 
 class Categoria(Base):
 
@@ -46,3 +53,7 @@ class Categoria(Base):
         ForeignKey("usuarios.id")
     )    
     activo = Column(Boolean, default=True)
+    movimientos = relationship(
+        "Movimiento",
+        back_populates="categoria"
+    )
