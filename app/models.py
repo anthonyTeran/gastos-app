@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -45,3 +45,4 @@ class Categoria(Base):
         Integer,
         ForeignKey("usuarios.id")
     )    
+    activo = Column(Boolean, default=True)

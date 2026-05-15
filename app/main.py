@@ -170,10 +170,9 @@ def borrar_movimiento(
         "mensaje": "Movimiento eliminado"
     }
 
-@app.post(
-    "/categorias",
-    response_model=schemas.Categoria
-)
+# ===== CATEGORIAS =====
+
+@app.post("/categorias")
 def crear_categoria(
     categoria: schemas.CategoriaCreate,
     db: Session = Depends(get_db),
@@ -181,28 +180,46 @@ def crear_categoria(
         obtener_usuario_actual
     )
 ):
-
     return crud.crear_categoria(
         db,
         categoria,
         usuario_id
     )
 
-@app.get(
-    "/categorias",
-    response_model=list[schemas.Categoria]
-)
+
+@app.get("/categorias")
 def listar_categorias(
+    page: int = 1,
+    limit: int = 5,
     db: Session = Depends(get_db),
     usuario_id: int = Depends(
         obtener_usuario_actual
     )
 ):
-
     return crud.obtener_categorias(
         db,
+        usuario_id,
+        page,
+        limit
+    )
+
+
+@app.put("/categorias/{categoria_id}")
+def editar_categoria(
+    categoria_id: int,
+    data: schemas.CategoriaUpdate,
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(
+        obtener_usuario_actual
+    )
+):
+    return crud.actualizar_categoria(
+        db,
+        categoria_id,
+        data,
         usuario_id
     )
+
 
 @app.delete("/categorias/{categoria_id}")
 def borrar_categoria(
@@ -212,19 +229,8 @@ def borrar_categoria(
         obtener_usuario_actual
     )
 ):
-
-    categoria = crud.eliminar_categoria(
+    return crud.eliminar_categoria(
         db,
         categoria_id,
         usuario_id
     )
-
-    if not categoria:
-        raise HTTPException(
-            status_code=404,
-            detail="Categoría no encontrada"
-        )
-
-    return {
-        "mensaje": "Categoría eliminada"
-    }

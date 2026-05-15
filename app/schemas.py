@@ -49,10 +49,15 @@ class CategoriaBase(BaseModel):
 class CategoriaCreate(CategoriaBase):
     pass
 
-class Categoria(CategoriaBase):
+class Categoria(BaseModel):
     id: int
-    usuario_id: int
+    nombre: str
+    tipo: str
+    activo: bool
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+class Config:
+        from_attributes = True
+
+class CategoriaUpdate(BaseModel):
+    nombre: str
+    tipo: str

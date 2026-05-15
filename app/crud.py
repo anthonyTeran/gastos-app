@@ -177,6 +177,7 @@ def obtener_saldo_usuario(
 
     return saldo
 
+# ===== CATEGORIAS =====
 
 def crear_categoria(
     db: Session,
@@ -191,25 +192,71 @@ def crear_categoria(
     )
 
     db.add(nueva)
-
     db.commit()
-
     db.refresh(nueva)
 
     return nueva
 
+
 def obtener_categorias(
     db: Session,
+    usuario_id: int,
+    page: int,
+    limit: int
+):
+
+    query = (
+        db.query(models.Categoria)
+        .filter(
+            models.Categoria.usuario_id == usuario_id,
+            models.Categoria.activo == True
+        )
+    )
+
+    total = query.count()
+
+    offset = (page - 1) * limit
+
+    categorias = (
+        query
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    return {
+        "items": categorias,
+        "total": total
+    }
+
+
+def actualizar_categoria(
+    db: Session,
+    categoria_id: int,
+    data: schemas.CategoriaUpdate,
     usuario_id: int
 ):
 
-    return (
+    categoria = (
         db.query(models.Categoria)
         .filter(
+            models.Categoria.id == categoria_id,
             models.Categoria.usuario_id == usuario_id
         )
-        .all()
+        .first()
     )
+
+    if not categoria:
+        return None
+
+    categoria.nombre = data.nombre
+    categoria.tipo = data.tipo
+
+    db.commit()
+    db.refresh(categoria)
+
+    return categoria
+
 
 def eliminar_categoria(
     db: Session,
@@ -229,8 +276,8 @@ def eliminar_categoria(
     if not categoria:
         return None
 
-    db.delete(categoria)
+    categoria.activo = False
 
     db.commit()
 
-    return categoria
+    return {"ok": True}

@@ -3,23 +3,29 @@ import axios from "axios";
 
 function Categorias() {
 
+  const API = "https://gastos-backend-j5au.onrender.com";
+
+  const token = localStorage.getItem("token");
+
   const [categorias, setCategorias] = useState([]);
+
+  const [pagina, setPagina] = useState(1);
+
+  const [totalPaginas, setTotalPaginas] = useState(1);
+
+  const [editando, setEditando] = useState(null);
 
   const [form, setForm] = useState({
     nombre: "",
     tipo: "gasto"
   });
 
-  const API = "https://gastos-backend-j5au.onrender.com";
-
-  const token = localStorage.getItem("token");
-
   const cargarCategorias = async () => {
 
     try {
 
       const res = await axios.get(
-        `${API}/categorias`,
+        `${API}/categorias?page=${pagina}&limit=5`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -27,7 +33,11 @@ function Categorias() {
         }
       );
 
-      setCategorias(res.data);
+      setCategorias(res.data.items);
+
+      setTotalPaginas(
+        Math.ceil(res.data.total / 5)
+      );
 
     } catch (error) {
       console.error(error);
@@ -36,7 +46,7 @@ function Categorias() {
 
   useEffect(() => {
     cargarCategorias();
-  }, []);
+  }, [pagina]);
 
   const handleChange = (e) => {
 
@@ -46,26 +56,77 @@ function Categorias() {
     });
   };
 
-  const crearCategoria = async (e) => {
+  const guardarCategoria = async (e) => {
 
     e.preventDefault();
 
     try {
 
-      await axios.post(
-        `${API}/categorias`,
-        form,
+      if (editando) {
+
+        await axios.put(
+          `${API}/categorias/${editando}`,
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+      } else {
+
+        await axios.post(
+          `${API}/categorias`,
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+      }
+
+      setForm({
+        nombre: "",
+        tipo: "gasto"
+      });
+
+      setEditando(null);
+
+      cargarCategorias();
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const editarCategoria = (cat) => {
+
+    setEditando(cat.id);
+
+    setForm({
+      nombre: cat.nombre,
+      tipo: cat.tipo
+    });
+  };
+
+  const eliminarCategoria = async (id) => {
+
+    if (!confirm("¿Eliminar categoría?")) {
+      return;
+    }
+
+    try {
+
+      await axios.delete(
+        `${API}/categorias/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
       );
-
-      setForm({
-        nombre: "",
-        tipo: "gasto"
-      });
 
       cargarCategorias();
 
@@ -85,7 +146,7 @@ function Categorias() {
       <div className="bg-white p-6 rounded-2xl shadow mb-6">
 
         <form
-          onSubmit={crearCategoria}
+          onSubmit={guardarCategoria}
           className="flex gap-4"
         >
 
@@ -117,7 +178,7 @@ function Categorias() {
             type="submit"
             className="bg-black text-white px-5 rounded-lg"
           >
-            Agregar
+            {editando ? "Guardar" : "Agregar"}
           </button>
 
         </form>
@@ -138,6 +199,10 @@ function Categorias() {
 
               <th className="p-4 text-left">
                 Tipo
+              </th>
+
+              <th className="p-4 text-left">
+                Acciones
               </th>
 
             </tr>
@@ -161,6 +226,24 @@ function Categorias() {
                   {cat.tipo}
                 </td>
 
+                <td className="p-4 flex gap-2">
+
+                  <button
+                    onClick={() => editarCategoria(cat)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    onClick={() => eliminarCategoria(cat.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                  >
+                    Eliminar
+                  </button>
+
+                </td>
+
               </tr>
 
             ))}
@@ -168,6 +251,30 @@ function Categorias() {
           </tbody>
 
         </table>
+
+        <div className="flex justify-between p-6">
+
+          <button
+            onClick={() => setPagina(pagina - 1)}
+            disabled={pagina === 1}
+            className="bg-gray-200 px-4 py-2 rounded"
+          >
+            Anterior
+          </button>
+
+          <span>
+            Página {pagina} de {totalPaginas || 1}
+          </span>
+
+          <button
+            onClick={() => setPagina(pagina + 1)}
+            disabled={pagina === totalPaginas}
+            className="bg-gray-200 px-4 py-2 rounded"
+          >
+            Siguiente
+          </button>
+
+        </div>
 
       </div>
 
