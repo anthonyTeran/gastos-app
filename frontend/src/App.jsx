@@ -53,7 +53,7 @@ function App() {
     try {
 
       const saldoRes = await axios.get(
-        `https://gastos-backend-j5au.onrender.com/saldo/1`,
+        `https://gastos-backend-j5au.onrender.com/saldo`,
         {
           headers: {
             Authorization: `Bearer ${token}`

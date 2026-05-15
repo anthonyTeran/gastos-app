@@ -130,10 +130,10 @@ def listar_movimientos(
         fecha_hasta
     )
 
-@app.get("/saldo/{usuario_id}")
+@app.get("/saldo")
 def saldo_usuario(
-    usuario_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_id: int = Depends(obtener_usuario_actual)
 ):
     return {
         "saldo": crud.obtener_saldo_usuario(
